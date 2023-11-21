@@ -1,6 +1,9 @@
 import styled from 'styled-components';
 import ListContainer from './ListContainer';
 import Button from './Button';
+import { Todo } from './Todo';
+import { useEffect, useState } from 'react';
+import { v4 as uuidv4 } from 'uuid';
 
 const CardContainer = styled.main`
   height: 100vh;
@@ -29,16 +32,32 @@ const TodosFilter = styled.div`
 `;
 
 const MainCard = () => {
+  const [todos, setTodos] = useState<Todo[]>([]);
+
+  const handleCreateTodo = () => {
+    const newTodo: Todo = {
+      id: uuidv4(),
+      dateCreated: Date.now(),
+      isCompleted: false,
+      isDeleted: false,
+    };
+    setTodos([...todos, newTodo]);
+  };
+
+  useEffect(() => {
+    console.log(todos);
+  }, [todos]);
+
   return (
     <CardContainer>
       <Title>📝 My Todos</Title>
-      <Button>+ Add</Button>
+      <Button onClick={handleCreateTodo}>+ Add</Button>
       <TodosFilter>
         <Button>In Progress</Button>
         <Button>Completed</Button>
         <Button>All</Button>
       </TodosFilter>
-      <ListContainer />
+      <ListContainer todos={todos} />
     </CardContainer>
   );
 };
